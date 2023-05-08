@@ -2,11 +2,11 @@
 
 namespace models;
 
-class Usuario extends Model {
+class Motorista extends Model {
 
-    protected $table = "usuarios";
+    protected $table = "motoristas";
     #nao esqueça da ID
-    protected $fields = ["id","nome","dataNascimento","tipo","ativado"];
+    protected $fields = ["id","usuario_id","veiculo_id"];
     
     public function findById($id){
         $stmt = $this->pdo->prepare("select * from {$this->table} where id = :id");
@@ -37,7 +37,7 @@ class Usuario extends Model {
                 (:".implode(",:",$fields).")";
         
         #caso voce queira ver como está o SQL descomente a linha
-        #dd($sql);
+        #dd($data);
 
         $stmt = $this->pdo->prepare($sql);
         if ($stmt->execute($values)) {

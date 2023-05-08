@@ -25,7 +25,7 @@
     <select name="tipo" class="form-control">
         <?php
         foreach($tipos as $k=>$tipo){
-            _v($data,"tipo") == 1 ? $selected='selected' : $selected='';
+            _v($data,"tipo") == $k ? $selected='selected' : $selected='';
             print "<option value='$k' $selected>$tipo</option>";
         }
         ?>

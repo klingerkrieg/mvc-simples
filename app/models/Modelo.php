@@ -2,11 +2,11 @@
 
 namespace models;
 
-class Usuario extends Model {
+class Modelo extends Model {
 
-    protected $table = "usuarios";
+    protected $table = "modelos";
     #nao esqueça da ID
-    protected $fields = ["id","nome","dataNascimento","tipo","ativado"];
+    protected $fields = ["id","modelo"];
     
     public function findById($id){
         $stmt = $this->pdo->prepare("select * from {$this->table} where id = :id");

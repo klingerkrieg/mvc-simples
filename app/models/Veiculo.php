@@ -2,20 +2,46 @@
 
 namespace models;
 
-class Usuario extends Model {
+class Veiculo extends Model {
 
-    protected $table = "usuarios";
+    protected $table = "veiculos";
     #nao esqueça da ID
-    protected $fields = ["id","nome","dataNascimento","tipo","ativado"];
+    protected $fields = ["id", "placa","modelo_id","cor","ano"];
+
+
+
+    public function getMotoristas($idVeiculo){
+        $sql = "SELECT * FROM usuarios 
+            INNER JOIN motoristas ON 
+                usuarios.id = motoristas.usuario_id 
+            WHERE motoristas.veiculo_id = :idVeiculo ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':idVeiculo' => $idVeiculo]);
+
+        $list = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($list,$row);
+        }
+
+        return $list;
+    }
+
     
     public function findById($id){
-        $stmt = $this->pdo->prepare("select * from {$this->table} where id = :id");
+        $sql = "SELECT veiculos.*, modelos.modelo as modelo FROM {$this->table} "
+                ." LEFT JOIN modelos ON modelos.id = veiculos.modelo_id "
+                ." WHERE veiculos.id = :id";
+        
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function all(){
-        $stmt = $this->pdo->prepare("select * from {$this->table}");
+        $sql = "SELECT veiculos.*, modelos.modelo as modelo FROM {$this->table} "
+                ." LEFT JOIN modelos ON modelos.id = veiculos.modelo_id ";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         
         $list = [];
@@ -74,6 +100,10 @@ class Usuario extends Model {
     }
 
     public function delete($id){
+
+        $stmt = $this->pdo->prepare("DELETE FROM motoristas WHERE veiculo_id = :id");
+        $stmt->execute(["id"=>$id]);
+
         $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(["id"=>$id]);
     }
