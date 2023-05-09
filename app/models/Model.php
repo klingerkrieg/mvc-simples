@@ -16,13 +16,15 @@ class Model {
 
 
     public function findById($id){
-        $stmt = $this->pdo->prepare("select * from {$this->table} where id = :id");
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function all(){
-        $stmt = $this->pdo->prepare("select * from {$this->table}");
+        $sql = "SELECT * FROM {$this->table}";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         
         $list = [];
