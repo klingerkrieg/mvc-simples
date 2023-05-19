@@ -1,11 +1,12 @@
 <?php
 
-$errStyleDisplay = "font-size:18px;background-color:#fff4ce;border:1px solid red;";
+$errStyleDisplay = "<style>.codeError{padding:20px;font-size:18px;background-color:#fff4ce;border:1px solid red;}</style>";
 
 
 function error_handler($code, $message, $file, $line) {
     global $errStyleDisplay;
-    print "<pre style='$errStyleDisplay;border:none;'>";
+    print $errStyleDisplay;
+    print "<pre class='codeError' style='border:none;'>";
     print("Code:".$code."\n");
     print("Message:".$message."\n");
     #print("File:".$file."\n");
@@ -24,7 +25,7 @@ function exception_handler($e) {
     );
     
     global $errStyleDisplay;
-    print "<pre style='$errStyleDisplay'>";
+    print "<pre class='codeError'>";
     print_r($errors[$e->getCode()].': '.$e->getMessage().' in '.$e->getFile().' on line '.$e->getLine()."\n");
     print_r($e->getTraceAsString());
     print "</pre>";

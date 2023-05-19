@@ -14,17 +14,34 @@ class Model {
         $this->pdo = $pdo;
     }
 
+    public function showError($sql,$data=[]){
+
+        foreach($data as $key=>$value){
+            $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);
+        }
+
+        $msg = $this->pdo->errorInfo();
+        print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
+    }
 
     public function findById($id){
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $data = [':id' => $id];
+        $stmt->execute($data);
+        if ($stmt == false){
+            $this->showError($sql,$data);
+        }
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function all(){
         $sql = "SELECT * FROM {$this->table}";
+        
         $stmt = $this->pdo->prepare($sql);
+        if ($stmt == false){
+            $this->showError($sql);
+        }
         $stmt->execute();
         
         $list = [];
@@ -49,6 +66,11 @@ class Model {
         #dd($sql);
 
         $stmt = $this->pdo->prepare($sql);
+
+        if ($stmt == false){
+            $this->showError($sql, $values);
+        }
+
         if ($stmt->execute($values)) {
             return $this->pdo->lastInsertId();
         } else {
@@ -74,6 +96,10 @@ class Model {
         #dd($sql);
         
         $stmt = $this->pdo->prepare($sql);
+
+        if ($stmt == false){
+            $this->showError($sql, $values);
+        }
         
         if ($stmt->execute($values)) {
             return $id;
@@ -84,7 +110,13 @@ class Model {
 
     public function delete($id){
         $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
-        return $stmt->execute(["id"=>$id]);
+        $stmt->execute(["id"=>$id]);
+
+        if ($stmt == false){
+            $this->showError($sql, $values);
+        }
+
+        return true;
     }
 
 
