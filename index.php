@@ -118,9 +118,11 @@ function all_models(){
 	}
 }
 
-$local = str_replace("index.php","", $_SERVER["SCRIPT_NAME"]);
-$parts = str_replace($local,"", $_SERVER["REQUEST_URI"]);
-$parts = trim(str_replace("index.php","", $parts),"/");
+$local = str_ireplace("index.php","", $_SERVER["SCRIPT_NAME"]);
+$parts = str_ireplace($local,"", $_SERVER["REQUEST_URI"]);
+$parts = trim(str_ireplace("index.php","", $parts),"/");
+
+
 
 if (strstr($parts,"#")){
 	$parts = substr($parts,0,strpos($parts,"#"));
