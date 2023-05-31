@@ -109,8 +109,10 @@ class Model {
     }
 
     public function delete($id){
-        $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
-        $stmt->execute(["id"=>$id]);
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $values = ["id"=>$id];
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($values);
 
         if ($stmt == false){
             $this->showError($sql, $values);
