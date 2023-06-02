@@ -15,13 +15,16 @@ class Model {
     }
 
     public function showError($sql,$data=[]){
+        global $DEBUG_MODE;
 
-        foreach($data as $key=>$value){
-            $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);
+        if ($DEBUG_MODE) {
+            foreach($data as $key=>$value){
+                $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);
+            }
+
+            $msg = $this->pdo->errorInfo();
+            print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
         }
-
-        $msg = $this->pdo->errorInfo();
-        print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
     }
 
     public function findById($id){
