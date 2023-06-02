@@ -10,7 +10,12 @@ table {
 td {
     border:1px solid;
 }
-
+.red {
+    color:red;
+    border:1px solid red;
+    padding:30px;
+    background-color:#ffe6b7;
+}
 </style>
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
@@ -29,8 +34,16 @@ print "<pre class='sqls'>";
 print "<code class='language-sql'>";
 foreach ($sqls as $sql) {
     print $sql;
-    if ($sql != "")
-        $pdo->exec($sql);
+    if ($sql != "") {
+        $res = $pdo->exec($sql);
+        $msg = $pdo->errorInfo();
+        
+        if ($msg[2] != ""){
+            print "</code></pre>";
+            print "<div class='red'>$sql<br/><br/>{$msg[2]}</div>";
+            die();
+        }
+    }
 }
 print "</code></pre>";
 

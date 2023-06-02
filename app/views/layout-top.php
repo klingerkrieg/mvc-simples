@@ -8,6 +8,9 @@
 
     <link rel="stylesheet" href="<?=assets('bootstrap/css/bootstrap.min.css')?>" />
     <script src="<?=assets('bootstrap/js/bootstrap.bundle.min.js')?>" ></script>
+	<script src="<?=assets('js/jquery.js')?>" ></script>
+	<script src="<?=assets('js/jquery.mask.min.js')?>" ></script>
+	<script src="<?=assets('js/form.js')?>" ></script>
 
     <link rel="stylesheet" href="<?=assets('css/estilo.css')?>" />
 </head>

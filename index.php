@@ -4,6 +4,9 @@ session_start();
 * Framework simples MVC
 * Autor:Alan Klinger 05/06/2017
 */
+
+$DEBUG_MODE = true;
+
 require 'app/sys/config.php';
 require 'app/sys/util.php';
 require 'app/sys/errors.php';
@@ -118,9 +121,11 @@ function all_models(){
 	}
 }
 
-$local = str_replace("index.php","", $_SERVER["SCRIPT_NAME"]);
-$parts = str_replace($local,"", $_SERVER["REQUEST_URI"]);
-$parts = trim(str_replace("index.php","", $parts),"/");
+$local = str_ireplace("index.php","", $_SERVER["SCRIPT_NAME"]);
+$parts = str_ireplace($local,"", $_SERVER["REQUEST_URI"]);
+$parts = trim(str_ireplace("index.php","", $parts),"/");
+
+
 
 if (strstr($parts,"#")){
 	$parts = substr($parts,0,strpos($parts,"#"));
@@ -143,6 +148,20 @@ if (_v($parts,0) != ""){
 	$class = "Principal";
 }
 
+
+if (!file_exists('app/controllers/'.$class.'Controller.php')){
+	if ( $DEBUG_MODE ){
+		print $errStyleDisplay;
+		$url = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}<b>{$_SERVER['REQUEST_URI']}</b>";
+		print "<div class='codeError'>Você tentou acessar <b>'controllers/{$class}Controller.php'</b> através da URL: $url";
+		print ", mas este controller não existe. <br/> Verifique se a URL está correta, o <b>/".strtolower($class)."</b> tem que ter exatamente 
+		o mesmo nome do controller que você deseja acessar. </div>";
+	} else {
+		http_response_code(404);
+	}
+	die();
+}
+
 include 'app/controllers/'.$class.'Controller.php';
 
 
@@ -162,7 +181,20 @@ $params_to_controller = array();
 
 #Converte o request para objetos
 $request = $_REQUEST;
-$r = new ReflectionMethod( $controller, $metodo );
+try {
+	$r = new ReflectionMethod( $controller, $metodo );
+} catch(Exception $e){
+	if ( $DEBUG_MODE ){
+		print $errStyleDisplay;
+		$url = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}<b>{$_SERVER['REQUEST_URI']}</b>";
+		print "<div class='codeError'>Você tentou acessar o método <b>$metodo()</b> da classe <b>'controllers/{$class}.php'</b> através da URL: $url";
+		print ", mas este <b>método</b> não existe. <br/> Verifique se a URL está correta, o <b>/".strtolower($metodo)."</b> tem que ter exatamente 
+		o mesmo nome do método que você deseja acessar. </div>";
+	} else {
+		http_response_code(404);
+	}
+	die();
+}
 $params = $r->getParameters();
 $methodDoc = strtolower($r->getDocComment());
 
