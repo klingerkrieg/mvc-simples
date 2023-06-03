@@ -37,3 +37,14 @@
 </nav>
 
 <div class="container">
+
+<?php 
+
+if (getFlash("success")){
+    print "<div class='alert alert-success' role='alert'>".getFlash("success")."</div>";
+} else
+if (getFlash("error")){
+    print "<div class='alert alert-danger' role='alert'>".getFlash("error")."</div>";
+}
+
+?>
