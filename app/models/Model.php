@@ -38,6 +38,52 @@ class Model {
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+    public function paginate($page=null, $limit=10){
+
+        if ($page == null){
+            if (isset($_GET['page'])){
+                $page = $_GET['page'];
+            } else {
+                $page = 1;
+            }
+        }
+
+        #Caso implemente algum filtro, ambos os SQL abaixo tem que ter o filtro implementado
+        #porém no primeiro só é pra trazer o count(*)
+
+        #a primeira consulta é somente para contar a quantidade de registros
+        $sql = "SELECT count(*) as count FROM {$this->table}";
+        $stmt = $this->pdo->prepare($sql);
+        if ($stmt == false){
+            $this->showError($sql);
+        }
+        $stmt->execute();
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $count = $row['count'];
+        $pageCount = ceil($count/$limit);
+
+        #dado a pagina iniciando da pagina 1, converte para a instrução sql
+        $from = ($page-1)*$limit;
+
+
+        $sql = "SELECT * FROM {$this->table} limit :from,:limit";
+        $data = [':from'=>$from, ':limit' => $limit];
+        
+        $stmt = $this->pdo->prepare($sql);
+        if ($stmt == false){
+            $this->showError($sql);
+        }
+        $stmt->execute($data);
+        
+        $list = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($list,$row);
+        }
+
+        return ["data"=>$list, "pages"=>$pageCount, "count"=>$count, "actualPage"=>$page];
+    }
+
     public function all(){
         $sql = "SELECT * FROM {$this->table}";
         

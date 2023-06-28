@@ -10,7 +10,7 @@ $DEBUG_MODE = true;
 require 'app/sys/config.php';
 require 'app/sys/util.php';
 require 'app/sys/errors.php';
-#require 'sys/Pagination.php';
+require 'app/sys/pagination.php';
 #require 'sys/validate.php';
 #require 'sys/messages.php';
 
@@ -243,11 +243,15 @@ foreach($_POST as $key=>$val){
 //$obj->$metodo();
 call_user_func_array(array($controller, $metodo), $params_to_controller);
 
+#limpa as variáveis
 $_SESSION['errors'] = [];
 $_SESSION['old'] 	= [];
 
-foreach($_SESSION['flash'] as $key=>$val){
-	if ($_SESSION['flash'][$key]["out"]){
-		unset($_SESSION['flash'][$key]);
+#Apos exibir o flash, limpa as variaveis
+if (isset($_SESSION['flash'])){
+	foreach($_SESSION['flash'] as $key=>$val){
+		if ($_SESSION['flash'][$key]["out"]){
+			unset($_SESSION['flash'][$key]);
+		}
 	}
 }

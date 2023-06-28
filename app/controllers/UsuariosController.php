@@ -31,7 +31,8 @@ class UsuariosController {
 		}
 
 		#busca todos os registros
-		$send['lista'] = $model->all();
+		$send['lista'] = $model->paginate();
+
 
 		$send['tipos'] = [0=>"Escolha uma opção", 1=>"Usuário comum", 2=>"Admin"];
 

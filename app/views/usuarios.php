@@ -46,7 +46,7 @@
         <th>Deletar</th>
     </tr>
 
-    <?php foreach($lista as $item): ?>
+    <?php foreach($lista['data'] as $item): ?>
 
         <tr>
             <td>
@@ -60,6 +60,14 @@
         </tr>
 
     <?php endforeach; ?>
+
+    <tr>
+        <td colspan='10'>
+            <?=htmlPagination($lista)?>
+        </td>
+    </tr>
 </table>
+
+
 
 <?php include 'layout-bottom.php' ?>
