@@ -34,3 +34,22 @@
 </nav>
 
 <div class="container">
+
+<?php
+#Apresenta as mensagens flash
+if (getFlash("success")){
+    print "<div class='alert alert-success' role='alert'>".getFlash("success")."</div>";
+} else
+if (getFlash("error")){
+    print "<div class='alert alert-danger' role='alert'>".getFlash("error")."</div>";
+}
+
+#Apresenta as mensagens de validacao
+if (isset($_SESSION['errors']) && count($_SESSION['errors']) > 0){
+    print '<div class="alert alert-danger" role="alert">';
+    foreach ($_SESSION['errors'] as $erros){
+        print "<div>$erros</div>";
+    }
+    print '</div>'; 
+}
+?>

@@ -11,8 +11,8 @@ require 'app/sys/config.php';
 require 'app/sys/util.php';
 require 'app/sys/errors.php';
 require 'app/sys/pagination.php';
-#require 'sys/validate.php';
-#require 'sys/messages.php';
+require 'app/sys/validations.php';
+
 
 #importa todos os models automaticamente
 require 'app/models/Model.php';
