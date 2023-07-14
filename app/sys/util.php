@@ -45,7 +45,7 @@ function dateToEUA($date = ""){
 }
 
 
-function old($field, $default){
+function old($field, $default=null){
     //se for array usa o mesmo field como chave
     if (is_array($default)){
         return _v($default,$field);
@@ -73,5 +73,20 @@ function getFlash($key){
         return $_SESSION['flash'][$key]["msg"];
     } else {
         return "";
+    }
+}
+
+
+function print_pdo_error($sql, $data){
+    global $DEBUG_MODE;
+    global $pdo;
+
+    if ($DEBUG_MODE) {
+        foreach($data as $key=>$value){
+            $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);
+        }
+
+        $msg = $pdo->errorInfo();
+        print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
     }
 }

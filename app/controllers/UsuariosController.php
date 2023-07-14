@@ -54,7 +54,8 @@ class UsuariosController {
 				  "dataNascimento"=>["func"=>"validateDate", "msg"=>"O campo Data precisa ser uma data válida", "params"=>['d/m/Y']], 
 				  "email"=>[
 							["func"=>"validateEmail", "msg"=>"O campo E-mail precisa ser um e-mail válido"],
-				  			["func"=>"validateRequired", "msg"=>"O campo E-mail é obrigatório"]
+				  			["func"=>"validateRequired", "msg"=>"O campo E-mail é obrigatório"],
+							["func"=>"validateUnique", "msg"=>"Este E-mail já está sendo utilizado", "params"=>["usuarios.email"]],
 				  		   ],
 				  "senha" =>["func"=>"validateEqual", "msg"=>"A confirmação da senha não foi igual à senha digitada", "params"=>[$_POST["senhaConfirm"]]], 
 				];

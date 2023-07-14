@@ -14,27 +14,31 @@ class Model {
         $this->pdo = $pdo;
     }
 
-    public function showError($sql,$data=[]){
-        global $DEBUG_MODE;
+    public function getTable(){
+        return $this->table;
+    }
 
-        if ($DEBUG_MODE) {
-            foreach($data as $key=>$value){
-                $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);
-            }
-
-            $msg = $this->pdo->errorInfo();
-            print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
+    protected function prepare($sql){
+        $stmt = $this->pdo->prepare($sql);
+        if ($stmt == false){
+            print_pdo_error($sql, $data);
         }
+        return $stmt;
+    }
+
+    protected function execute($stmt, $data=[]){
+        $stmt->execute($data);
+        if ($stmt == false){
+            print_pdo_error($sql, $data);
+        }
+        return $stmt;
     }
 
     public function findById($id){
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->prepare($sql);
         $data = [':id' => $id];
-        $stmt->execute($data);
-        if ($stmt == false){
-            $this->showError($sql,$data);
-        }
+        $this->execute($stmt, $data);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
@@ -53,11 +57,9 @@ class Model {
 
         #a primeira consulta é somente para contar a quantidade de registros
         $sql = "SELECT count(*) as count FROM {$this->table}";
-        $stmt = $this->pdo->prepare($sql);
-        if ($stmt == false){
-            $this->showError($sql);
-        }
-        $stmt->execute();
+        $stmt = $this->prepare($sql);
+        $this->execute($stmt);
+        
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         $count = $row['count'];
         $pageCount = ceil($count/$limit);
@@ -69,12 +71,9 @@ class Model {
         $sql = "SELECT * FROM {$this->table} limit :from,:limit";
         $data = [':from'=>$from, ':limit' => $limit];
         
-        $stmt = $this->pdo->prepare($sql);
-        if ($stmt == false){
-            $this->showError($sql);
-        }
-        $stmt->execute($data);
-        
+        $stmt = $this->prepare($sql);
+        $this->execute($stmt,$data);
+                
         $list = [];
 
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -87,11 +86,9 @@ class Model {
     public function all(){
         $sql = "SELECT * FROM {$this->table}";
         
-        $stmt = $this->pdo->prepare($sql);
-        if ($stmt == false){
-            $this->showError($sql);
-        }
-        $stmt->execute();
+        $stmt = $this->prepare($sql);
+        
+        $this->execute($stmt);
         
         $list = [];
 
@@ -114,15 +111,12 @@ class Model {
         #caso voce queira ver como está o SQL descomente a linha
         #dd($sql);
 
-        $stmt = $this->pdo->prepare($sql);
-
-        if ($stmt == false){
-            $this->showError($sql, $values);
-        }
-
-        if ($stmt->execute($values)) {
+        $stmt = $this->prepare($sql);
+        
+        if ($this->execute($stmt, $values)) {
             return $this->pdo->lastInsertId();
         } else {
+            print_pdo_error($sql, $data);
             return false;
         }
     }
@@ -144,15 +138,12 @@ class Model {
         #caso voce queira ver como está o SQL descomente a linha
         #dd($sql);
         
-        $stmt = $this->pdo->prepare($sql);
-
-        if ($stmt == false){
-            $this->showError($sql, $values);
-        }
+        $stmt = $this->prepare($sql);
         
-        if ($stmt->execute($values)) {
+        if ($this->execute($stmt, $values)) {
             return $id;
         } else {
+            print_pdo_error($sql, $data);
             return false;
         }
     }
@@ -160,13 +151,8 @@ class Model {
     public function delete($id){
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         $values = ["id"=>$id];
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($values);
-
-        if ($stmt == false){
-            $this->showError($sql, $values);
-        }
-
+        $stmt = $this->prepare($sql);
+        $this->execute($stmt, $values);
         return true;
     }
 

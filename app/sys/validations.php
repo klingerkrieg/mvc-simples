@@ -89,8 +89,7 @@ function validateDate($date, $format = 'Y-m-d H:i:s') {
 
 //https://stackoverflow.com/questions/12026842/how-to-validate-an-email-address-in-php
 function validateEmail($email) {
-    $v = "/[a-zA-Z0-9_-.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+/";
-    return (bool)preg_match($v, $email);
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
 //https://programadoresdepre.com.br/script-para-validar-cpf-em-php/
@@ -143,3 +142,32 @@ function validateCPF($cpf) {
 function validateEqual($str1, $str2){
     return $str1 == $str2;
 }
+
+/** Faz uma consulta ao banco para saber se já existe um registro com aquele valor
+*   na coluna/tabela especificada
+*/
+function validateUnique($value, $fieldWithTable){
+    global $pdo;
+    global $DEBUG_MODE;
+    
+    list($table, $field) = explode(".",$fieldWithTable);
+    
+    $sql = "SELECT COUNT(*) as qtd FROM $table WHERE $field = :value";
+    
+    $stmt = $pdo->prepare($sql);
+    if ($stmt == false){
+        print_pdo_error($sql, $data);
+    }
+    $data = [':value' => $value];
+    $stmt->execute($data);
+    if ($stmt == false){
+        print_pdo_error($sql, $data);
+    } else {
+        $rw = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $rw["qtd"] == 0;
+    }
+}
+
+
+
+        
