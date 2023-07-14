@@ -21,15 +21,16 @@ class Model {
     protected function prepare($sql){
         $stmt = $this->pdo->prepare($sql);
         if ($stmt == false){
-            print_pdo_error($sql, $data);
+            print_pdo_error($sql);
         }
         return $stmt;
     }
 
     protected function execute($stmt, $data=[]){
         $stmt->execute($data);
+        
         if ($stmt == false){
-            print_pdo_error($sql, $data);
+            print_pdo_error($stmt->queryString, $data);
         }
         return $stmt;
     }

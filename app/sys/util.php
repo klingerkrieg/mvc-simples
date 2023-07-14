@@ -77,7 +77,7 @@ function getFlash($key){
 }
 
 
-function print_pdo_error($sql, $data){
+function print_pdo_error($sql, $data=[]){
     global $DEBUG_MODE;
     global $pdo;
 

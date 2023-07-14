@@ -43,8 +43,6 @@ class AutenticacaoController {
 
 
     function novo_usuario(){
-		#cria o model
-		$model = new Usuario();
 		$send = ["data"=>[]];
 		#chama a view
 		render("auth/cadastro", $send);
@@ -67,6 +65,51 @@ class AutenticacaoController {
 		
 		redirect("autenticacao");
 	}
+
+    function recuperar_senha(){
+        $send = [];
+        render("auth/recuperar_senha", $send);
+    }
+
+    function recuperar_senha_send_email(){
+        
+        $model = new Usuario();
+        $token = $model->createToken($_POST['email']);
+        if($token){
+            
+            $url = route("autenticacao/alterar_senha?tk=$token");
+            $msg = "Você solicitou a alteração da sua senha? Se sim, <a href='$url'>clique aqui para alterar a sua senha</a>.";
+            dd($msg);
+
+        } else {
+            setValidationError("email","O E-mail digitado não foi encontrado");
+            validate([], [], "Falha ao solicitar a alteração da senha.");
+        }
+    }
+
+    function alterar_senha(){
+        $send["token"] = $_GET['tk'];
+        render("auth/alterar_senha", $send);
+    }
+
+    function salvar_alteracao_senha(){
+        $model = new Usuario();
+
+		$rules = [
+                    "senha" =>["func"=>"validateEqual", "msg"=>"A confirmação da senha não foi igual à senha digitada", "params"=>[$_POST["senhaConfirm"]]], 
+				];
+		validate($rules, $_POST, "Falha ao alterar a senha.");
+		
+        $user = $model->getByToken($_POST['token']);
+		if ($user){
+            $model->update($user['id'],["senha"=>$_POST['senha'], "pass_token"=>null]);
+            setFlash("success","Senha alterada com sucesso.");
+        } else {
+            setFlash("error","Token de usuário não encontrado.");
+        }
+
+		redirect("autenticacao");
+    }
     
 
 }

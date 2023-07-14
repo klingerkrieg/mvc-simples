@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     senha           TEXT    NOT NULL,
     dataNascimento  TEXT,
     tipo            INTEGER,
-    ativado         INTEGER
+    ativado         INTEGER,
+    pass_token      TEXT
 );
 
 INSERT INTO usuarios (id, nome, email, senha, dataNascimento, tipo, ativado) values (1,'teste 1', 'teste1@gmail.com', '123456', '01-01-2000',1,1);
