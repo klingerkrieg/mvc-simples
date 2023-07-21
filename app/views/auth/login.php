@@ -19,4 +19,14 @@
 
 </form>
 
+<?php
+
+if ($_GET['show_last_email'] == 1){
+    <script>
+    window.open('https://javascript.info/');
+    </script>
+}
+
+?>
+
 <?php include 'app/views/layout-bottom.php' ?>

@@ -79,7 +79,15 @@ class AutenticacaoController {
             
             $url = route("autenticacao/alterar_senha?tk=$token");
             $msg = "Você solicitou a alteração da sua senha? Se sim, <a href='$url'>clique aqui para alterar a sua senha</a>.";
-            dd($msg);
+            
+            $sent = send_email("Recuperação de senha", $_POST['email'], $msg);
+            if ($sent) {
+                setFlash("success", "Foi enviado um e-mail com o link para a recuperação da sua senha. Verifique sua caixa de e-mail.");
+            } else {
+                setFlash("error", "Serviço indisponível, tente novamente mais tarde.");
+            }
+
+            redirect("autenticacao?show_last_email=1");
 
         } else {
             setValidationError("email","O E-mail digitado não foi encontrado");

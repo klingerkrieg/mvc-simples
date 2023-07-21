@@ -90,3 +90,34 @@ function print_pdo_error($sql, $data=[]){
         print "<div class='codeError'>$sql<br/><br/>{$msg[2]}</div>";
     }
 }
+
+/** 
+ * Essa função simula o envio de e-mail, salvando os e-mails enviados na pasta sent
+*/
+$last_email = null;
+function send_email($assunto, $destino, $msg){
+    global $last_email;
+    $headers  = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    $headers .= "From: ".EMAIL_NAME." <".EMAIL_FROM.">";
+
+    $html =  "<pre>". htmlentities($headers) ."</pre><hr/>" . $msg;
+    if (!file_exists("./sent/"))
+        mkdir("./sent");
+
+    $last_email ="./sent/".date('d-m-Y H.i.s').".html";
+    file_put_contents($last_email, $html);
+
+    return true;
+    /*    
+    $enviaremail = mail($destino, $assunto, $msg, $headers, "-Xeef5ef7cff2773:23e3de4fedb40b");
+    if($enviaremail){
+        return true;
+    } else {
+        return false;
+    }*/
+}
+
+function get_last_email_sent(){
+    return $last_email;
+}
