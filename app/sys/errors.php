@@ -11,8 +11,8 @@ function error_handler($code, $message, $file, $line) {
         print "<pre class='codeError' style='border:none;'>";
         print("Code:".$code."\n");
         print("Message:".$message."\n");
-        #print("File:".$file."\n");
-        #print("Line:".$line."\n");
+        print("File:".$file."\n");
+        print("Line:".$line."\n");
         print "</pre>";
     }
 }

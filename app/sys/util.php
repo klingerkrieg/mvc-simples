@@ -127,3 +127,22 @@ function get_last_email_sent(){
     }
     return false;
 }
+
+function saveUpload($file, $output){
+
+    if (!file_exists($output))
+        mkdir($output);
+
+    $newName = $file["name"];
+    $i = 1;
+    while(file_exists($output."/".$newName)){
+        $name = substr($file["name"], 0, strrpos($file["name"], '.'));
+        $ext = substr(strrchr($file["name"], '.'), 1);
+        $newName = $name."[".$i."].$ext";
+        $i++;
+    }
+    $out = str_replace("//","/",$output."/".$newName);
+    move_uploaded_file($file["tmp_name"],$out);
+
+    return $out;
+}

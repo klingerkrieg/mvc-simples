@@ -1,1 +1,3 @@
 sent/*
+uploads/*
+!uploads/index.html

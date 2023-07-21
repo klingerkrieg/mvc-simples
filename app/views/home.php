@@ -21,6 +21,14 @@
 
     <div class="card mb-3 mt-3">
         <div class="card-body">
+        <h3 class="card-title">Exemplo de Upload</h3>
+
+        <p>Este projeto contém um exemplo de um CRUD com upload: <a href="<?=route("exemplo_upload")?>"><?=route("exemplo_upload")?></a> </p>
+        </div>
+    </div>
+
+    <div class="card mb-3 mt-3">
+        <div class="card-body">
         <h3 class="card-title">Criando um CRUD novo</h3>
 
         Digamos que você vá criar um CRUD para veículos:
@@ -35,6 +43,41 @@
             <li>Crie a view veiculos em <b>app/views/veiculos.php</b> </li>
 
         </ol>
+        </div>
+    </div>
+
+
+    <div class="card mb-3 mt-3">
+        <div class="card-body">
+        <h3 class="card-title">Autenticação</h3>
+
+        Acesse <a href="<?=route("autenticacao")?>"><?=route("autenticacao")?></a> para testar a autenticação pré-pronta.
+
+        Para implementar no seu sistema, você deverá apenas setar essa rota como a principal em 
+        <b>app/sys/config.php</b> e proteger os controllers que não poderão ser acessados sem autenticação 
+        verificando se <b>$_SESSION['user']</b> existe na sessão. Exemplo:
+
+            <pre>
+
+#construtor, é iniciado sempre que a classe é chamada
+function __construct() {
+    #se nao existir é porque nao está logado
+    if (!isset($_SESSION["user"])){
+        redirect("autenticacao");
+        die();
+    }
+}
+</pre>
+
+
+            Caso deseje verificar também o <b>nível do usuário</b>, verifique o tipo cadastrado. Exemplo:
+<pre>
+#proibe o usuário de entrar caso não tenha autorização (Caso nao seja do tipo ADMIN)
+if ($_SESSION['user']['tipo'] < Usuario::ADMIN_USER){
+    header("HTTP/1.1 401 Unauthorized");
+    die();
+}
+</pre>
         </div>
     </div>
 
@@ -80,6 +123,13 @@
                 <th>assets('arquivo.js')</th>
                 <td>
                     Entrega para você o endereço para algum arquivo dentro da pasta public: <?=assets('arquivo.js')?>
+                    Evite incluir qualquer arquivo sem essa função.
+                </td>
+            </tr>
+            <tr>
+                <th>base('upload/foto.png')</th>
+                <td>
+                    Entrega para você o endereço para algum arquivo desde o diretório base (root): <?=base('upload/foto.png')?>
                     Evite incluir qualquer arquivo sem essa função.
                 </td>
             </tr>

@@ -8,8 +8,11 @@ $host = "app/database/database.sqlite";
 #$user = "root";
 #$pass = "";
 
+#conexao com o banco de dados
+$pdo = new \PDO("sqlite:" . $host);
+
+
+#Configuracoes para E-mail
 const EMAIL_ENABLED = true;
 const EMAIL_FROM = "suporte@seudominio.com";
 const EMAIL_NAME = "Suporte";
-
-$pdo = new \PDO("sqlite:" . $host);

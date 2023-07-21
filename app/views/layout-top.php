@@ -29,6 +29,10 @@
           <a class="nav-link" href="<?=route('usuarios')?>">Usuários</a>
         </li>
 
+        <li class="nav-item">
+          <a class="nav-link" href="<?=route('exemplo_upload')?>">Exemplo de Upload</a>
+        </li>
+
         <?php if (isset($_SESSION['user'])): ?>
         <li class="nav-item">
           <a class="nav-link" href="<?=route('autenticacao/logout')?>">Deslogar</a>

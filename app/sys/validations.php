@@ -76,6 +76,9 @@ function getValidationError($field){
 }
 
 function validateRequired($value){
+    if (is_array($value)){
+        return true;
+    }
     if ( trim($value) == ""){
         return false;
     }
@@ -155,10 +158,11 @@ function validateUnique($value, $fieldWithTable){
     $sql = "SELECT COUNT(*) as qtd FROM $table WHERE $field = :value";
     
     $stmt = $pdo->prepare($sql);
+
+    $data = [':value' => $value];
     if ($stmt == false){
         print_pdo_error($sql, $data);
     }
-    $data = [':value' => $value];
     $stmt->execute($data);
     if ($stmt == false){
         print_pdo_error($sql, $data);
@@ -168,6 +172,19 @@ function validateUnique($value, $fieldWithTable){
     }
 }
 
+function validateFileExtension($value, $extensions){
+    $extensions = explode("|",$extensions);
 
+    $name = mb_strtolower($value["name"]);
+    $ext = substr(strrchr($name, '.'), 1);
 
+    return in_array($ext, $extensions);
+}
         
+
+function validateFileSize($value, $size){
+    $size = str_replace("mb","000000",$size);
+    $size = str_replace("kb","000",$size);
+    $size = str_replace("b","",$size);
+    return ($value["size"] < $size);
+}

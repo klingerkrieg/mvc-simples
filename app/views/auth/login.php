@@ -1,5 +1,11 @@
 <?php include 'app/views/layout-top.php' ?>
 
+<?php if (isset($msg) && $msg != "") : ?>
+    <div class="alert alert-danger" role="alert">
+    <?=$msg?>
+    </div>
+<?php endif; ?>
+
 <form method='POST' action='<?=route('autenticacao/logar/')?>'>
 
     <label class='col-md-4'>
@@ -20,7 +26,7 @@
 </form>
 
 <?php
-
+#adaptacao para ver o e-mail que foi enviado
 if (_v($_GET,'show_last_email') == 1){
     print "<script>
     window.open('./sent/".get_last_email_sent()."','targetWindow','resizable=yes,width=500,height=300');

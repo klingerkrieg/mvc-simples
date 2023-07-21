@@ -35,6 +35,11 @@ function serverUrl(){
 	return $server_url;
 }
 
+function base($path=""){
+	global $server_url;
+	return $server_url.$path;
+}
+
 function _url($url){
 
 	$arr = explode("/",$url);
