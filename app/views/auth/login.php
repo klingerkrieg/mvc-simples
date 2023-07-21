@@ -21,10 +21,10 @@
 
 <?php
 
-if ($_GET['show_last_email'] == 1){
-    <script>
-    window.open('https://javascript.info/');
-    </script>
+if (_v($_GET,'show_last_email') == 1){
+    print "<script>
+    window.open('./sent/".get_last_email_sent()."','targetWindow','resizable=yes,width=500,height=300');
+    </script>";
 }
 
 ?>

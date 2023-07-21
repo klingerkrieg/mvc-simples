@@ -94,7 +94,6 @@ function print_pdo_error($sql, $data=[]){
 /** 
  * Essa função simula o envio de e-mail, salvando os e-mails enviados na pasta sent
 */
-$last_email = null;
 function send_email($assunto, $destino, $msg){
     global $last_email;
     $headers  = 'MIME-Version: 1.0' . "\r\n";
@@ -105,7 +104,7 @@ function send_email($assunto, $destino, $msg){
     if (!file_exists("./sent/"))
         mkdir("./sent");
 
-    $last_email ="./sent/".date('d-m-Y H.i.s').".html";
+    $last_email ="./sent/".date('Y-m-d_H.i.s').".html";
     file_put_contents($last_email, $html);
 
     return true;
@@ -119,5 +118,12 @@ function send_email($assunto, $destino, $msg){
 }
 
 function get_last_email_sent(){
-    return $last_email;
+    if (!file_exists("./sent/"))
+        return false;
+
+    $files1 = scandir("./sent/", SCANDIR_SORT_DESCENDING);
+    if (isset($files1[0]) && $files1[0] != "." && $files1[0] != ".."){
+        return $files1[0];
+    }
+    return false;
 }
