@@ -1,6 +1,6 @@
 <?php
-#primeiro controller a ser chamado por padrao
-$index = "Principal";
+#primeiro controller a ser chamado por padrão
+const INDEX = "Principal";
 
 $host = "app/database/database.sqlite";
 #$host = "localhost";
@@ -9,7 +9,11 @@ $host = "app/database/database.sqlite";
 #$pass = "";
 
 #conexao com o banco de dados
+
+#SQLITE
 $pdo = new \PDO("sqlite:" . $host);
+#MYSQL
+#$pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
 
 
 #Configuracoes para E-mail
