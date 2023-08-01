@@ -20,6 +20,7 @@ class Model {
 
     protected function prepare($sql){
         $stmt = $this->pdo->prepare($sql);
+        
         if ($stmt == false){
             print_pdo_error($sql);
         }
@@ -43,6 +44,20 @@ class Model {
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+
+    protected $filterSQL    = "";
+    protected $filterValues = [];
+    public function addPaginateFilter($arr){
+        #sobrescreva esse metodo no seu model
+        #ele deve construir um WHERE em $this->filterSQL
+        #e colocar os valores em $this->filterValues
+    }
+
+    public function clearFilters(){
+        $this->filterSQL    = "";
+        $this->filterValues = [];
+    }
+
     public function paginate($page=null, $limit=10){
 
         if ($page == null){
@@ -58,7 +73,8 @@ class Model {
 
         #a primeira consulta é somente para contar a quantidade de registros
         $sql = "SELECT count(*) as count FROM {$this->table}";
-        $stmt = $this->prepare($sql);
+        $sql .= $this->filterSQL;
+        $stmt = $this->prepare($sql, $this->filterValues);
         $this->execute($stmt);
         
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -69,8 +85,8 @@ class Model {
         $from = ($page-1)*$limit;
 
 
-        $sql = "SELECT * FROM {$this->table} limit :from,:limit";
-        $data = [':from'=>$from, ':limit' => $limit];
+        $sql = "SELECT * FROM {$this->table} {$this->filterSQL} limit :from,:limit";
+        $data = array_merge($this->filterValues, [':from'=>$from, ':limit' => $limit]);
         
         $stmt = $this->prepare($sql);
         $this->execute($stmt,$data);
@@ -86,8 +102,9 @@ class Model {
 
     public function all(){
         $sql = "SELECT * FROM {$this->table}";
-        
-        $stmt = $this->prepare($sql);
+        $sql .= $this->filterSQL;
+
+        $stmt = $this->prepare($sql, $this->filterValues);
         
         $this->execute($stmt);
         

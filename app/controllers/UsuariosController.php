@@ -22,7 +22,6 @@ class UsuariosController {
 		#cria o model
 		$model = new Usuario();
 		
-		
 		$send['data'] = null;
 		#se for diferente de nulo é porque estou editando o registro
 		if ($id != null){
@@ -30,7 +29,8 @@ class UsuariosController {
 			$send['data'] = $model->findById($id);
 		}
 
-		#busca todos os registros
+		#busca todos os registros com base no filtro
+		$model->addPaginateFilter($_GET);
 		$send['lista'] = $model->paginate();
 
 

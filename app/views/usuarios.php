@@ -50,6 +50,28 @@
 
 </form>
 
+
+<hr/>
+
+
+<form method='GET' action='<?=route('usuarios/'._v($data,"id"))?>'>
+
+    <div class='row align-items-end'>
+        <div  class='col-md-4'>
+            <label>
+                Pesquisar
+                <input type="text" class="form-control" name="search" value="<?=_v($_GET,"search")?>" >
+            </label>
+        </div>
+        <div  class='col-md-4'>
+            <button class='btn btn-primary col-12 col-md-3 mt-3'>Pesquisar</button>
+        </div>
+    </div>
+
+    
+
+</form>
+
 <table class='table'>
 
     <tr>

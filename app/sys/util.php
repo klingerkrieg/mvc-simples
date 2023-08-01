@@ -80,7 +80,7 @@ function getFlash($key){
 function print_pdo_error($sql, $data=[]){
     global $DEBUG_MODE;
     global $pdo;
-
+    
     if ($DEBUG_MODE) {
         foreach($data as $key=>$value){
             $sql = str_replace($key, '\'' . str_replace('\'', '\\\'', $value) . '\'', $sql);

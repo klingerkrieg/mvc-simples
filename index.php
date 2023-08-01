@@ -5,6 +5,12 @@ session_start();
 * Autor:Alan Klinger 05/06/2017
 */
 
+if (!file_exists(".htaccess")){
+	print "O arquivo .htaccess não está no root, você apagou? Não deveria.";
+	die();
+}
+
+
 $DEBUG_MODE = true;
 
 require 'app/sys/config.php';

@@ -151,7 +151,6 @@ function validateEqual($str1, $str2){
 */
 function validateUnique($value, $fieldWithTable){
     global $pdo;
-    global $DEBUG_MODE;
     
     list($table, $field) = explode(".",$fieldWithTable);
     
